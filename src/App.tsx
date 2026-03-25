@@ -1,5 +1,12 @@
 function App() {
-  return <h1>Eternoo</h1>;
+  return (
+    <>
+      <header>
+        <h1>ETERNOO</h1>
+      </header>
+      <main></main>
+    </>
+  );
 }
 
 export default App;
