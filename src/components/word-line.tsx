@@ -11,7 +11,7 @@ const input = tv({
       disabled: "bg-secondary-background border-2 border-secondary-background",
       exists: "bg-exists border-2 border-exists",
       right: "bg-right border-2 border-right",
-      wrong: "bg-wrong border-2 border-wrong",
+      wrong: "bg-wrong border-2 border-wrong text-blue-foreground",
     },
   },
 });
