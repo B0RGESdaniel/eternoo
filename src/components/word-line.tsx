@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
+import { AttemptedWordState } from "../types/attempted-word-state";
 
 const input = tv({
   base: "w-10 h-12 rounded-md font-bold text-center text-2xl pointer-events-none focus:outline-none caret-transparent select-none",
@@ -25,12 +26,27 @@ export type LetterVariant =
 interface WordLineProps {
   word?: string;
   letterVariants?: LetterVariant[];
-  disabled?: boolean;
+  state: AttemptedWordState;
+  wordArrayValue: string[];
+  setWordArrayValue: React.Dispatch<React.SetStateAction<string[]>>;
+  onSubmit?: () => void;
 }
 
-export function WordLine({ word, letterVariants, disabled }: WordLineProps) {
+export function WordLine({
+  word,
+  letterVariants,
+  state,
+  wordArrayValue,
+  setWordArrayValue,
+  onSubmit,
+}: WordLineProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [letters, setLetters] = useState<string[]>(["", "", "", "", ""]);
+
+  useEffect(() => {
+    if (state === AttemptedWordState.Active) {
+      inputRefs.current[0]?.focus();
+    }
+  }, [state]);
 
   function handleLetterChange(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -38,9 +54,9 @@ export function WordLine({ word, letterVariants, disabled }: WordLineProps) {
   ) {
     const value = e.target.value.toLocaleUpperCase();
     if (value.length === 1) {
-      const newLetters = [...letters];
+      const newLetters = [...wordArrayValue];
       newLetters[index] = value;
-      setLetters(newLetters);
+      setWordArrayValue(newLetters);
       inputRefs.current[index + 1]?.focus();
     }
   }
@@ -57,44 +73,57 @@ export function WordLine({ word, letterVariants, disabled }: WordLineProps) {
       e.preventDefault();
       inputRefs.current[index - 1]?.focus();
     }
+    if (e.key === "Enter") {
+      onSubmit?.();
+    }
     if (e.key === "Backspace") {
       e.preventDefault();
-      if (letters[index]) {
-        const newLetters = [...letters];
+      if (wordArrayValue[index]) {
+        const newLetters = [...wordArrayValue];
         newLetters[index] = "";
-        setLetters(newLetters);
+        setWordArrayValue(newLetters);
       } else if (index > 0) {
-        const newLetters = [...letters];
+        const newLetters = [...wordArrayValue];
         newLetters[index - 1] = "";
-        setLetters(newLetters);
+        setWordArrayValue(newLetters);
         inputRefs.current[index - 1]?.focus();
       }
     }
   };
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
+  function handleValue(index: number): string {
+    if (state === AttemptedWordState.Active) {
+      return wordArrayValue[index] ?? "";
+    }
+    if (word) {
+      return word.split("")[index];
+    }
+    return "";
+  }
+
+  function handleWordState(letterVariant: LetterVariant | undefined) {
+    if (state === AttemptedWordState.Submitted) {
+      return letterVariant;
+    }
+    return state;
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-row gap-1">
+    <div className="flex flex-row gap-1">
       {Array.from({ length: 5 }).map((_, index) => {
         const letterVariant = letterVariants?.[index];
-        const isDisabled = disabled ? true : letterVariant !== "active";
+        const isDisabled = state !== AttemptedWordState.Active;
         return (
           <input
             type="text"
-            value={
-              word
-                ? (word[index].toLocaleUpperCase() ?? "")
-                : (letters[index] ?? "")
-            }
+            value={handleValue(index)}
             className={input({
-              variant: letterVariant ?? "disabled",
+              variant: handleWordState(letterVariant),
             })}
             key={index}
             maxLength={1}
             disabled={isDisabled}
+            autoFocus={index === 0 && state === AttemptedWordState.Active}
             onChange={(e) => handleLetterChange(e, index)}
             tabIndex={-1}
             ref={(el) => {
@@ -105,6 +134,6 @@ export function WordLine({ word, letterVariants, disabled }: WordLineProps) {
           />
         );
       })}
-    </form>
+    </div>
   );
 }
