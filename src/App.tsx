@@ -14,12 +14,25 @@ type AttemptedWord = {
   state: AttemptedWordState;
 };
 
+type KeyHit = "notUsed" | "wrong" | "exists" | "right";
+
 function App() {
   const [attemptedWords, setAttemptedWords] = useState<AttemptedWord[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentAttempt, setCurrentAttempt] = useState<string[]>([]);
 
   const todaysWord = "adaga".toLocaleUpperCase().split("");
+
+  const hitPriority: Record<KeyHit, number> = { notUsed: 0, wrong: 1, exists: 2, right: 3 };
+  const keyHits: Record<string, KeyHit> = {};
+  for (const word of attemptedWords) {
+    word.wordArray.forEach((letter, i) => {
+      const hit = word.letterHits[i] as KeyHit;
+      if (!keyHits[letter] || hitPriority[hit] > hitPriority[keyHits[letter]]) {
+        keyHits[letter] = hit;
+      }
+    });
+  }
 
   function checkLetterInRightWord(
     attemptedWord: string[],
@@ -97,9 +110,6 @@ function App() {
         <img src={logo} alt="Eternoo Logo" className="w-42 h-42" />
       </header>
       <main className="w-full flex items-center justify-center flex-col gap-1 mt-4">
-        {/*<button className="w-6 h-6 flex items-center justify-center bg-secondary-background border border-blue-foreground text-blue-foreground rounded-md cursor-pointer">
-          A
-        </button>*/}
         {Array.from({ length: 6 }).map((_, index) => {
           return (
             <WordLine
@@ -115,14 +125,14 @@ function App() {
             />
           );
         })}
-        <button
+        {/*<button
           type="button"
           onClick={() => handleSubmitWord(currentAttempt, currentWordIndex)}
           className="mt-4 w-24 p-2 rounded-md bg-primary font-medium"
         >
           Enviar
-        </button>
-        <Keyboard />
+        </button>*/}
+        <Keyboard keyHits={keyHits} />
       </main>
     </div>
   );
