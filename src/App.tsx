@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LetterVariant } from "./types/letter-variant";
 import { AttemptedWordState } from "./types/attempted-word-state";
 import { Keyboard } from "./components/keyboard";
+import { FinishDialog } from "./components/finish-dialog";
 
 type AttemptedWord = {
   wordArray: string[];
@@ -20,6 +21,7 @@ function App() {
   const [attemptedWords, setAttemptedWords] = useState<AttemptedWord[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentAttempt, setCurrentAttempt] = useState<string[]>([]);
+  const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false);
 
   const todaysWord = "adaga".toLocaleUpperCase().split("");
 
@@ -99,6 +101,16 @@ function App() {
     };
     submittedWords[index] = newSubmittedWord;
     setAttemptedWords(submittedWords);
+    setIsFinishDialogOpen(true);
+
+    if (
+      currentWordIndex === 5 &&
+      !checkedWordArray.every((hit) => hit === "right")
+    ) {
+      toast.error("Você perdeu! a palavra correta era " + todaysWord.join(""));
+      return;
+    }
+
     if (checkedWordArray.every((hit) => hit === "right")) {
       toast.success("Parabéns! Você acertou a palavra");
       return;
@@ -149,14 +161,11 @@ function App() {
             />
           );
         })}
-        {/*<button
-          type="button"
-          onClick={() => handleSubmitWord(currentAttempt, currentWordIndex)}
-          className="mt-4 w-24 p-2 rounded-md bg-primary font-medium"
-        >
-          Enviar
-        </button>*/}
         <Keyboard keyHits={keyHits} onKey={handleKeyPress} />
+        <FinishDialog
+          isOpen={isFinishDialogOpen}
+          setOpenFn={setIsFinishDialogOpen}
+        />
       </main>
     </div>
   );
