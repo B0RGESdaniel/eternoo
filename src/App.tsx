@@ -23,7 +23,12 @@ function App() {
 
   const todaysWord = "adaga".toLocaleUpperCase().split("");
 
-  const hitPriority: Record<KeyHit, number> = { notUsed: 0, wrong: 1, exists: 2, right: 3 };
+  const hitPriority: Record<KeyHit, number> = {
+    notUsed: 0,
+    wrong: 1,
+    exists: 2,
+    right: 3,
+  };
   const keyHits: Record<string, KeyHit> = {};
   for (const word of attemptedWords) {
     word.wordArray.forEach((letter, i) => {
@@ -104,6 +109,25 @@ function App() {
     return;
   }
 
+  function handleKeyPress(key: string) {
+    if (!key) return;
+
+    if (key === "⌫" && currentAttempt.length > 0) {
+      const attempt = currentAttempt.slice(0, -1) ?? [""];
+      setCurrentAttempt(attempt);
+      return;
+    }
+
+    if (key.length === 1 && key.match(/[a-z]/i)) {
+      setCurrentAttempt([...currentAttempt, key.toUpperCase()]);
+    }
+
+    if (key === "ENTER" && currentAttempt.length > 0) {
+      handleSubmitWord(currentAttempt, currentWordIndex);
+      return;
+    }
+  }
+
   return (
     <div className="flex-1 p-6">
       <header className="w-full h-14 flex items-center justify-center flex-col gap-2 p-4">
@@ -132,7 +156,7 @@ function App() {
         >
           Enviar
         </button>*/}
-        <Keyboard keyHits={keyHits} />
+        <Keyboard keyHits={keyHits} onKey={handleKeyPress} />
       </main>
     </div>
   );

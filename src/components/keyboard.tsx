@@ -34,7 +34,7 @@ const button = tv({
 });
 
 interface KeyboardProps {
-  onKey?: (key: string) => void;
+  onKey: (key: string) => void;
   keyHits?: Record<string, KeyHit>;
 }
 
@@ -52,7 +52,7 @@ export function Keyboard({ onKey, keyHits = {} }: KeyboardProps) {
           {row.map((key) => (
             <button
               key={key.letter}
-              // onClick={() => onKey(key)}
+              onClick={() => onKey(key.letter ?? "")}
               className={button({
                 size: handleSize(key.letter),
                 hit: keyHits[key.letter] ?? key.hit,
