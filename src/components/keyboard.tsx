@@ -18,7 +18,7 @@ const button = tv({
     size: {
       letter: "w-8.5 lg:w-14",
       enter: "w-22 lg:w-36 border-primary! text-primary! font-semibold",
-      backspace: "w-10 lg:w-14",
+      backspace: "w-10 lg:w-14 text-lg font-bold",
     },
     hit: {
       notUsed: "bg-secondary-background border border-blue-foreground",
