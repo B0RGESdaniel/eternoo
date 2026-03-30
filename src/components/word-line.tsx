@@ -2,7 +2,7 @@ import { tv, cn } from "tailwind-variants";
 import { AttemptedWordState } from "../types/attempted-word-state";
 
 const cell = tv({
-  base: "w-15 lg:w-16 h-16 lg:h-17 rounded-md font-bold text-center text-2xl lg:text-4xl select-none flex items-center justify-center",
+  base: "w-13 lg:w-16 h-14 lg:h-17 rounded-md font-bold text-center text-2xl lg:text-4xl select-none flex items-center justify-center",
   variants: {
     variant: {
       active: "border-2 border-muted-background",

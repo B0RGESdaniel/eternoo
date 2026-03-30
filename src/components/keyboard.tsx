@@ -13,7 +13,7 @@ const ROWS: LetterKey[][] = [
 ];
 
 const button = tv({
-  base: "h-18 lg:h-16 flex items-center justify-center text-blue-foreground font-medium text-base lg:text-xl rounded-md cursor-pointer",
+  base: "h-16 flex items-center justify-center text-blue-foreground font-medium text-base lg:text-xl rounded-md cursor-pointer",
   variants: {
     size: {
       letter: "w-8.5 lg:w-14",
