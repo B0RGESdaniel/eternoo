@@ -171,7 +171,7 @@ function App() {
   function handleKeyPress(key: string) {
     if (!key) return;
 
-    if (key === "⌫") {
+    if (key === "DELETE") {
       const newAttempt = [...currentAttempt];
       if (newAttempt[currentFocusIndex]) {
         newAttempt[currentFocusIndex] = "";
@@ -202,7 +202,7 @@ function App() {
   useEffect(() => {
     function handlePhysicalKey(e: KeyboardEvent) {
       if (isFinishDialogOpen) return;
-      if (e.key === "Backspace") return handleKeyPress("⌫");
+      if (e.key === "Backspace") return handleKeyPress("DELETE");
       if (e.key === "Enter") return handleKeyPress("ENTER");
       if (e.key === "ArrowLeft") {
         e.preventDefault();

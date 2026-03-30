@@ -1,4 +1,5 @@
 import { tv } from "tailwind-variants";
+import { Delete } from "lucide-react";
 import { LETTERS } from "../utils/alphabet";
 
 type KeyHit = "notUsed" | "wrong" | "exists" | "right";
@@ -8,7 +9,7 @@ const KEYS: LetterKey[] = LETTERS.map((l) => ({ letter: l, hit: "notUsed" }));
 
 const ROWS: LetterKey[][] = [
   KEYS.slice(0, 10),
-  [...KEYS.slice(10, 19), { letter: "⌫", hit: "notUsed" }],
+  [...KEYS.slice(10, 19), { letter: "DELETE", hit: "notUsed" }],
   [...KEYS.slice(19), { letter: "ENTER", hit: "notUsed" }],
 ];
 
@@ -18,7 +19,7 @@ const button = tv({
     size: {
       letter: "w-8.5 lg:w-14",
       enter: "w-22 lg:w-36 border-primary! text-primary! font-semibold",
-      backspace: "w-10 lg:w-14 text-xl font-bold",
+      backspace: "w-10 lg:w-14 text-3xl font-bold",
     },
     hit: {
       notUsed: "bg-secondary-background border border-blue-foreground",
@@ -41,7 +42,7 @@ interface KeyboardProps {
 export function Keyboard({ onKey, keyHits = {} }: KeyboardProps) {
   function handleSize(key: string) {
     if (key === "ENTER") return "enter";
-    if (key === "⌫") return "backspace";
+    if (key === "DELETE") return "backspace";
     return "letter";
   }
 
@@ -61,7 +62,7 @@ export function Keyboard({ onKey, keyHits = {} }: KeyboardProps) {
                 hit: keyHits[key.letter] ?? key.hit,
               })}
             >
-              {key.letter}
+              {key.letter === "DELETE" ? <Delete size={20} /> : key.letter}
             </button>
           ))}
         </div>
