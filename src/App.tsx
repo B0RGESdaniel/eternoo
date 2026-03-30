@@ -251,7 +251,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-dvh overflow-hidden py-3">
-      <header className="w-full h-14 flex items-center justify-center flex-col gap-2 pt-4">
+      <header className="w-full h-14 flex items-center justify-center flex-col gap-1">
         <img src={logo} alt="Eternoo Logo" className="w-35 h-35" />
         <p className="text-blue-foreground text-sm lg:text-xs">
           Sequência atual:{" "}
