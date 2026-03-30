@@ -13,11 +13,11 @@ const ROWS: LetterKey[][] = [
 ];
 
 const button = tv({
-  base: "h-18 lg:h-16 flex items-center justify-center text-blue-foreground font-medium text-lg lg:text-xl rounded-md cursor-pointer",
+  base: "h-18 lg:h-16 flex items-center justify-center text-blue-foreground font-medium text-base lg:text-xl rounded-md cursor-pointer",
   variants: {
     size: {
-      letter: "w-8 lg:w-14",
-      enter: "w-24 lg:w-36 border-primary! text-primary! font-semibold",
+      letter: "w-8.5 lg:w-14",
+      enter: "w-22 lg:w-36 border-primary! text-primary! font-semibold",
       backspace: "w-10 lg:w-14",
     },
     hit: {
@@ -46,7 +46,7 @@ export function Keyboard({ onKey, keyHits = {} }: KeyboardProps) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-2 gap-1 mt-4 shrink-0">
+    <div className="flex flex-col items-center justify-center p-2 gap-1">
       {ROWS.map((row, rowIndex) => (
         <div
           key={rowIndex}

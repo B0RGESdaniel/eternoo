@@ -252,17 +252,13 @@ function App() {
   return (
     <div className="flex flex-col h-dvh overflow-hidden py-3">
       <header className="w-full h-14 flex items-center justify-center flex-col gap-2 pt-4">
-        <img
-          src={logo}
-          alt="Eternoo Logo"
-          className="w-42 h-42 lg:w-50 lg:h-50"
-        />
-        <p className="text-blue-foreground text-sm lg:text-sm">
+        <img src={logo} alt="Eternoo Logo" className="w-35 h-35" />
+        <p className="text-blue-foreground text-sm lg:text-xs">
           Sequência atual:{" "}
           <strong className="font-semibold">{getStreak()}</strong>🔥
         </p>
       </header>
-      <main className="flex flex-1 flex-col items-center mt-10 justify-between overflow-hidden">
+      <main className="flex-1 flex flex-col items-center justify-between overflow-hidden">
         <div className="flex-1 w-full flex items-center justify-center">
           <div className="flex items-center justify-between flex-col gap-1">
             {Array.from({ length: 6 }).map((_, index) => {
