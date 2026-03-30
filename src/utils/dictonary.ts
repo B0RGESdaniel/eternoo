@@ -1275,7 +1275,9 @@ const dictionary: string[] = [
 const dictionarySet = new Set(dictionary);
 
 export function getRandomWord(): string {
-  return dictionary[Math.floor(Math.random() * dictionary.length)];
+  return dictionary[
+    Math.floor(Math.random() * dictionary.length)
+  ].toUpperCase();
 }
 
 export const isValidWord = (word: string): boolean => dictionarySet.has(word);
