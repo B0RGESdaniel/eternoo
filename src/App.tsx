@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WordLine } from "./components/word-line";
 import logo from "./assets/logo-eternoo.svg";
 import { getRandomWord, isValidWord } from "./utils/dictonary";
@@ -30,8 +30,9 @@ function saveStreak(value: number) {
 
 function App() {
   const [attemptedWords, setAttemptedWords] = useState<AttemptedWord[]>([]);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentAttemptIndex, setCurrentAttemptIndex] = useState(0);
   const [currentAttempt, setCurrentAttempt] = useState<string[]>([]);
+  const [currentFocusIndex, setCurrentFocusIndex] = useState(0);
   const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false);
   const [secretWord, setSecretWord] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -99,19 +100,21 @@ function App() {
     if (attemptedWords[index]?.letterHits.length === 5) {
       return "submitted";
     }
-    if (Number(index) === currentWordIndex) {
+    if (Number(index) === currentAttemptIndex) {
       return "active";
     }
     return "disabled";
   }
 
   function handleSubmitWord(wordArray: string[], index: number) {
-    if (wordArray.length === 0) {
+    const filled = wordArray.filter(Boolean);
+
+    if (filled.length === 0) {
       toast.error("Insira uma palavra");
       return;
     }
 
-    if (wordArray.length < 5) {
+    if (filled.length < 5) {
       toast.error("A palavra deve ter 5 letras");
       return;
     }
@@ -130,9 +133,10 @@ function App() {
     };
     submittedWords[index] = newSubmittedWord;
     setAttemptedWords(submittedWords);
+    setCurrentFocusIndex(0);
 
     if (
-      currentWordIndex === 5 &&
+      currentAttemptIndex === 5 &&
       !checkedWordArray.every((hit) => hit === "right")
     ) {
       saveStreak(0);
@@ -151,7 +155,7 @@ function App() {
       saveStreak(newStreak);
       setResult({
         guessed: true,
-        attempts: currentWordIndex + 1,
+        attempts: currentAttemptIndex + 1,
         streak: newStreak,
         secretWord: secretWord.join(""),
       });
@@ -159,7 +163,7 @@ function App() {
       return;
     }
 
-    setCurrentWordIndex(currentWordIndex + 1);
+    setCurrentAttemptIndex(currentAttemptIndex + 1);
     setCurrentAttempt([]);
     return;
   }
@@ -167,21 +171,59 @@ function App() {
   function handleKeyPress(key: string) {
     if (!key) return;
 
-    if (key === "⌫" && currentAttempt.length > 0) {
-      const attempt = currentAttempt.slice(0, -1) ?? [""];
-      setCurrentAttempt(attempt);
+    if (key === "⌫") {
+      const newAttempt = [...currentAttempt];
+      if (newAttempt[currentFocusIndex]) {
+        newAttempt[currentFocusIndex] = "";
+        setCurrentAttempt(newAttempt);
+      } else if (currentFocusIndex > 0) {
+        newAttempt[currentFocusIndex - 1] = "";
+        setCurrentAttempt(newAttempt);
+        setCurrentFocusIndex(currentFocusIndex - 1);
+      }
       return;
     }
 
     if (key.length === 1 && key.match(/[a-z]/i)) {
-      setCurrentAttempt([...currentAttempt, key.toUpperCase()]);
+      if (currentFocusIndex >= 5) return;
+      const newAttempt = [...currentAttempt];
+      newAttempt[currentFocusIndex] = key.toUpperCase();
+      setCurrentAttempt(newAttempt);
+      setCurrentFocusIndex(Math.min(currentFocusIndex + 1, 4));
+      return;
     }
 
     if (key === "ENTER") {
-      handleSubmitWord(currentAttempt, currentWordIndex);
+      handleSubmitWord(currentAttempt, currentAttemptIndex);
       return;
     }
   }
+
+  useEffect(() => {
+    function handlePhysicalKey(e: KeyboardEvent) {
+      if (isFinishDialogOpen) return;
+      if (e.key === "Backspace") return handleKeyPress("⌫");
+      if (e.key === "Enter") return handleKeyPress("ENTER");
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setCurrentFocusIndex((i) => Math.max(i - 1, 0));
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setCurrentFocusIndex((i) => Math.min(i + 1, 4));
+        return;
+      }
+      if (e.key.length === 1 && e.key.match(/[a-z]/i)) handleKeyPress(e.key);
+    }
+    window.addEventListener("keydown", handlePhysicalKey);
+    return () => window.removeEventListener("keydown", handlePhysicalKey);
+  }, [
+    currentAttempt,
+    currentAttemptIndex,
+    currentFocusIndex,
+    isFinishDialogOpen,
+  ]);
 
   function copyResultHitmapToClipboard() {
     const hitmap = getHitmap(
@@ -193,7 +235,7 @@ function App() {
 
   function handleNextWord() {
     setAttemptedWords([]);
-    setCurrentWordIndex(0);
+    setCurrentAttemptIndex(0);
     setSecretWord(getRandomWord().split(""));
     setCurrentAttempt([]);
     setIsFinishDialogOpen(false);
@@ -229,11 +271,9 @@ function App() {
                   state={getWordStateByIndex(index)}
                   letterVariants={attemptedWords[index]?.letterHits}
                   wordArrayValue={currentAttempt}
-                  setWordArrayValue={setCurrentAttempt}
                   word={attemptedWords[index]?.wordArray.join("")}
-                  onSubmit={() =>
-                    handleSubmitWord(currentAttempt, currentWordIndex)
-                  }
+                  currentFocusIndex={currentFocusIndex}
+                  setCurrentFocusIndex={setCurrentFocusIndex}
                 />
               );
             })}
