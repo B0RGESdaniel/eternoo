@@ -1350,6 +1350,7 @@ const dictionary: string[] = [
   "forum",
   "negra",
   "neura",
+  "tibia",
 ];
 
 const dictionarySet = new Set(dictionary);
