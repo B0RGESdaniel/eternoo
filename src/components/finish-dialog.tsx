@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Dialog } from "@base-ui/react";
 import { Copy, ArrowRight, Link, Check } from "lucide-react";
 
@@ -26,6 +26,7 @@ export function FinishDialog({
   onCopy,
   onShareLink,
 }: FinishDialogProps) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [copied, setCopied] = useState(false);
   const [linkedCopied, setLinkedCopied] = useState(false);
 
@@ -54,8 +55,15 @@ export function FinishDialog({
     >
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 min-h-dvh bg-black opacity-70 transition-all duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-[-webkit-touch-callout:none]:absolute" />
-        <Dialog.Popup className="fixed top-1/2 left-1/2 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-background p-6 text-neutral outline-1 outline-muted-background transition-all duration-150 data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0">
-          <Dialog.Title className="-mt-1.5 mb-1 text-lg font-medium">
+        <Dialog.Popup
+          initialFocus={titleRef}
+          className="fixed top-1/2 left-1/2 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-background p-6 text-neutral outline-1 outline-muted-background transition-all duration-150 data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0"
+        >
+          <Dialog.Title
+            ref={titleRef}
+            tabIndex={-1}
+            className="-mt-1.5 mb-1 text-lg font-medium outline-none"
+          >
             {getTitle(result.guessed)}
           </Dialog.Title>
           <div className="flex flex-col gap-2 mt-3 text-blue-foreground text-sm">
@@ -96,7 +104,7 @@ export function FinishDialog({
             </button>
             <button
               className="flex items-center gap-2 justify-center bg-primary border border-primary text-neutral rounded-md p-2.5  cursor-pointer"
-              onClick={() => setOpenFn(false)}
+              onClick={() => onNext()}
             >
               Próxima palavra
               <ArrowRight size={18} />
