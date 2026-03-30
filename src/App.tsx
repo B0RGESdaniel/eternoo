@@ -141,32 +141,43 @@ function App() {
   }
 
   return (
-    <div className="flex-1 p-6">
+    <div className="flex flex-col h-dvh overflow-hidden py-3">
       <header className="w-full h-14 flex items-center justify-center flex-col gap-2 p-4">
-        <img src={logo} alt="Eternoo Logo" className="w-42 h-42" />
-      </header>
-      <main className="w-full flex items-center justify-center flex-col gap-1 mt-4">
-        {Array.from({ length: 6 }).map((_, index) => {
-          return (
-            <WordLine
-              key={index}
-              state={getWordStateByIndex(index)}
-              letterVariants={attemptedWords[index]?.letterHits}
-              wordArrayValue={currentAttempt}
-              setWordArrayValue={setCurrentAttempt}
-              word={attemptedWords[index]?.wordArray.join("")}
-              onSubmit={() =>
-                handleSubmitWord(currentAttempt, currentWordIndex)
-              }
-            />
-          );
-        })}
-        <Keyboard keyHits={keyHits} onKey={handleKeyPress} />
-        <FinishDialog
-          isOpen={isFinishDialogOpen}
-          setOpenFn={setIsFinishDialogOpen}
+        <img
+          src={logo}
+          alt="Eternoo Logo"
+          className="w-42 h-42 lg:w-50 lg:h-50"
         />
+        <p className="text-blue-foreground italic text-xs lg:text-sm">
+          Jogue quantas vezes quiser!
+        </p>
+      </header>
+      <main className="flex flex-1 flex-col items-center mt-12 justify-between overflow-hidden">
+        <div className="flex-1 w-full flex items-center justify-center">
+          <div className="flex items-center justify-between flex-col gap-1">
+            {Array.from({ length: 6 }).map((_, index) => {
+              return (
+                <WordLine
+                  key={index}
+                  state={getWordStateByIndex(index)}
+                  letterVariants={attemptedWords[index]?.letterHits}
+                  wordArrayValue={currentAttempt}
+                  setWordArrayValue={setCurrentAttempt}
+                  word={attemptedWords[index]?.wordArray.join("")}
+                  onSubmit={() =>
+                    handleSubmitWord(currentAttempt, currentWordIndex)
+                  }
+                />
+              );
+            })}
+          </div>
+        </div>
+        <Keyboard keyHits={keyHits} onKey={handleKeyPress} />
       </main>
+      <FinishDialog
+        isOpen={isFinishDialogOpen}
+        setOpenFn={setIsFinishDialogOpen}
+      />
     </div>
   );
 }

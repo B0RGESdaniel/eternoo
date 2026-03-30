@@ -3,11 +3,11 @@ import { tv } from "tailwind-variants";
 import { AttemptedWordState } from "../types/attempted-word-state";
 
 const input = tv({
-  base: "w-10 h-12 rounded-md font-bold text-center text-2xl pointer-events-none focus:outline-none caret-transparent select-none",
+  base: "w-15 lg:w-18 h-16 lg:h-19 rounded-md font-bold text-center text-3xl lg:text-4xl pointer-events-none focus:outline-none caret-transparent select-none",
   variants: {
     variant: {
       active:
-        "border-2 border-muted-background focus:border-b-6 pointer-events-auto",
+        "border-2 border-muted-background focus:border-b-10 pointer-events-auto",
       disabled: "bg-secondary-background border-2 border-secondary-background",
       exists: "bg-exists border-2 border-exists",
       right: "bg-right border-2 border-right",
