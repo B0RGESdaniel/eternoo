@@ -245,7 +245,8 @@ function App() {
   function handleShareLink() {
     const encoded = btoa(secretWord.join("").toLowerCase());
     const url = `${window.location.origin}${window.location.pathname}?w=${encoded}`;
-    navigator.clipboard.writeText(url);
+    const text = "Tente acertar essa palavra: " + url;
+    navigator.clipboard.writeText(text);
   }
 
   return (
