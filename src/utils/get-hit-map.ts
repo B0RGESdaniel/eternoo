@@ -14,6 +14,8 @@ export function getHitmap(streak: number, attempts: LetterVariant[][]) {
   return `
   Eternoo 🔥${streak}\n
   ${attempts.length}/6 tentativas\n
-  \n${emojiString}
+  \n${emojiString}\n
+  \nby @dnbalanoalvo
+
   `;
 }
