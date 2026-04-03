@@ -1,73 +1,48 @@
-# React + TypeScript + Vite
+# Eternoo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Eternoo é um jogo no estilo Wordle em português — com uma diferença: você pode jogar quantas vezes quiser, sem esperar o dia seguinte.
 
-Currently, two official plugins are available:
+## Como jogar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O objetivo é descobrir a palavra secreta de **5 letras** em até **6 tentativas**.
 
-## React Compiler
+A cada tentativa, as letras recebem cores indicando o quão perto você chegou:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Cor | Significado |
+|-----|-------------|
+| Verde | A letra está na posição correta |
+| Amarelo | A letra existe na palavra, mas está na posição errada |
+| Cinza | A letra não existe na palavra |
 
-## Expanding the ESLint configuration
+Use as dicas das tentativas anteriores para chegar à palavra correta.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Funcionalidades
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Jogue à vontade** — sem limite diário, uma nova palavra a qualquer momento
+- **Sequência de vitórias** — seu streak é salvo entre sessões
+- **Teclado virtual** — as teclas ficam coloridas conforme suas tentativas
+- **Teclado físico** — suporte completo ao teclado do computador, incluindo setas para navegar entre as letras
+- **Compartilhar resultado** — copie o grid de emojis com o resultado da sua partida
+- **Desafiar alguém** — gere um link com a palavra atual para outra pessoa resolver
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tecnologias
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## Rodando localmente
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Acesse `http://localhost:5173` no navegador.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Build de produção
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview
 ```
